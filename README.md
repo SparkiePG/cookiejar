@@ -1,1 +1,45 @@
-# cookiejar
+# Cookie Cabinet
+
+Cookie Cabinet is a browser extension/add-on that lets you efficiently create, edit and delete cookies for the current tab. Perfect for developing, quickly testing or even manually managing your cookies for your privacy.
+
+Cookie Cabinet is designed to have a modern, minimalist interface that lets you do most standard cookie operations quickly. It is ideal for developing and testing web pages.
+
+You can easily create, edit and delete a cookie for the current page that you are visiting. There is also a handy button to mass delete all the cookies for the current page.
+
+Cookie Cabinet is available for:
+- Google Chrome
+- Firefox
+- Safari
+- Edge
+- Opera.
+
+It should be possible to install it on any webkit browser, but keep in mind that only the previous five browsers are officially supported.
+
+Cookie Cabinet is available on mobile devices with an interface optimised for touchscreens:
+- Firefox for Android
+- Safari for iOS
+- Edge for Android and iOS
+
+Find this extension on the Chrome Web Store.
+![Chrome Web Store](https://github.com/Moustachauve/cookie-editor/raw/master/readme/get-chrome.png) <!-- Link to original image for now -->
+Find this extension on the Firefox Add-ons site.
+![Firefox Add-ons](https://github.com/Moustachauve/cookie-editor/raw/master/readme/get-firefox.webp) <!-- Link to original image for now -->
+
+Cookie Cabinet is available for both Mac and iOS. It has been tested on Mac, iPhone and iPad.
+Find this extension on the App Store.
+![Apple App Store](https://github.com/Moustachauve/cookie-editor/raw/master/readme/get-safari-mac.svg) <!-- Link to original image for now -->
+Find this extension on the Microsoft Store.
+Find this extension on the Opera Extensions site.
+![Opera add-ons](https://github.com/Moustachauve/cookie-editor/raw/master/readme/get-opera.png) <!-- Link to original image for now -->
+
+---
+
+## License and Attribution
+
+This project is a derivative work based on [Cookie-Editor](https://github.com/Moustachauve/cookie-editor) by Moustachauve.
+- Original project: https://github.com/Moustachauve/cookie-editor
+- Original License: MIT License (as per original repository)
+
+Cookie Cabinet is licensed under the GNU General Public License v3.0 (GPL-3.0). See the `LICENSE` file for the full text.
+
+This derivative work includes modifications to the user interface, branding, and underlying technology stack (React, TypeScript, Vite, Tailwind CSS) while maintaining functional parity with the original Cookie-Editor's core features. The original copyright holders and authors of Cookie-Editor are acknowledged.
