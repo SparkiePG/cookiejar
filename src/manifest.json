@@ -1,0 +1,26 @@
+{
+  "manifest_version": 3,
+  "name": "Cookie Cabinet",
+  "version": "1.0.0",
+  "description": "A modern, minimalist cookie editor for developers and privacy-conscious users.",
+  "icons": {
+    "16": "icon16.png",
+    "48": "icon48.png",
+    "128": "icon128.png"
+  },
+  "action": {
+    "default_popup": "popup/index.html",
+    "default_title": "Open Cookie Cabinet"
+  },
+  "background": {
+    "service_worker": "background.ts"
+  },
+  "permissions": [
+    "cookies",
+    "storage",
+    "activeTab"
+  ],
+  "host_permissions": [
+    "<all_urls>"
+  ]
+}
