@@ -4,7 +4,7 @@
 // Original project: https://github.com/Moustachauve/cookie-editor
 // Copyright (C) 2023-present Cookie Cabinet contributors
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import CookieList from './components/CookieList';
 import CookieEditor from './components/CookieEditor';
 import ImportExport from './components/ImportExport';
@@ -20,6 +20,8 @@ const App: React.FC = () => {
   const [isAdding, setIsAdding] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
   const [darkMode, setDarkMode] = useState(false);
+  const [statusMessage, setStatusMessage] = useState<string | null>(null);
+  const statusTimeoutRef = useRef<NodeJS.Timeout | null>(null); // Ref to hold timeout ID
 
   useEffect(() => {
     // Check for saved theme preference
@@ -32,6 +34,11 @@ const App: React.FC = () => {
   }, []);
 
   useEffect(() => {
+    // Clear previous timeout if status changes quickly
+    if (statusTimeoutRef.current) {
+      clearTimeout(statusTimeoutRef.current);
+    }
+
     // Apply dark mode class to body
     if (darkMode) {
       document.body.classList.add('dark');
@@ -40,7 +47,21 @@ const App: React.FC = () => {
     }
     // Save theme preference
     chrome.storage.local.set({ darkMode });
-  }, [darkMode]);
+
+    // Set a timeout to clear the status message after 5 seconds
+    if (statusMessage) {
+      statusTimeoutRef.current = setTimeout(() => {
+        setStatusMessage(null);
+      }, 5000);
+    }
+
+    // Cleanup timeout on unmount or when status changes
+    return () => {
+      if (statusTimeoutRef.current) {
+        clearTimeout(statusTimeoutRef.current);
+      }
+    };
+  }, [darkMode, statusMessage]);
 
   useEffect(() => {
     // Filter cookies based on search term
@@ -65,10 +86,14 @@ const App: React.FC = () => {
       chrome.runtime.sendMessage({ action: 'getCookies' }, (response) => {
         if (response.error) {
           console.error('Failed to load cookies:', response.error);
+          setStatusMessage(`Error loading cookies: ${response.error}`);
         } else {
-          setCookies(response.cookies);
+          setCookies(response.cookies || []);
+          setStatusMessage(response.cookies ? `Loaded ${response.cookies.length} cookies.` : 'No cookies found.');
         }
       });
+    } else {
+        setStatusMessage('No active tab found.');
     }
   };
 
@@ -86,13 +111,15 @@ const App: React.FC = () => {
   const handleDeleteCookie = (cookie: Cookie) => {
     if (window.confirm(`Are you sure you want to delete the cookie "${cookie.name}"?`)) {
       chrome.runtime.sendMessage(
-        { action: 'deleteCookie', cookie: { name: cookie.name, url: cookie.url } },
+        { action: 'deleteCookie', cookie: { name: cookie.name, url: cookie.url! } }, // url should be present from loadCookies
         (response) => {
           if (response.error) {
             console.error('Failed to delete cookie:', response.error);
+            setStatusMessage(`Error deleting cookie: ${response.error}`);
           } else {
             // Reload cookies after deletion
             loadCookies();
+            setStatusMessage(`Deleted cookie "${cookie.name}".`);
           }
         }
       );
@@ -103,9 +130,11 @@ const App: React.FC = () => {
     chrome.runtime.sendMessage({ action: 'saveCookie', cookie }, (response) => {
       if (response.error) {
         console.error('Failed to save cookie:', response.error);
+        setStatusMessage(`Error saving cookie: ${response.error}`);
       } else {
         // Reload cookies after save
         loadCookies();
+        setStatusMessage(response.cookie ? `Saved cookie "${response.cookie.name}".` : 'Cookie saved.');
       }
       setIsEditing(false);
     });
@@ -116,8 +145,10 @@ const App: React.FC = () => {
       chrome.runtime.sendMessage({ action: 'deleteAllCookies' }, (response) => {
         if (response.error) {
           console.error('Failed to delete all cookies:', response.error);
+          setStatusMessage(`Error deleting all cookies: ${response.error}`);
         } else {
-          console.log(response.message); // Log success message
+          console.log(response.message); // Log success message from background
+          setStatusMessage(response.message); // Display message from background script
           // Reload cookies after mass deletion
           loadCookies();
         }
@@ -125,16 +156,24 @@ const App: React.FC = () => {
     }
   };
 
-  const handleImportCookies = (cookies: Cookie[]) => {
-    // Logic to import cookies would go here, potentially sending messages to background
-    // For now, just reload to show the imported state if it happened externally
-    loadCookies();
+  const handleImportCookies = (cookiesToImport: Cookie[]) => {
+    chrome.runtime.sendMessage({ action: 'importCookies', cookies: cookiesToImport }, (response) => {
+        if (response.error) {
+            console.error('Failed to import cookies:', response.error);
+            setStatusMessage(`Error importing cookies: ${response.error}`);
+        } else {
+            console.log(response.message); // Log success/failure message from background
+            setStatusMessage(response.message); // Display message from background script
+            loadCookies(); // Reload the list to show imported cookies
+        }
+    });
   };
 
-  const handleExportCookies = (format: 'json') => {
-    // Logic to export cookies would go here
-    console.log('Exporting cookies in format:', format);
-  };
+  // const handleExportCookies = (format: 'json' | 'netscape') => { // Example for future Netscape format
+  //     // Export logic handled within ImportExport component now
+  //     console.log('Exporting cookies in format:', format);
+  //     setStatusMessage(`Exporting cookies as ${format.toUpperCase()}...`); // Placeholder
+  // };
 
   return (
     <div className={`min-h-full flex flex-col bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100`}>
@@ -146,6 +185,15 @@ const App: React.FC = () => {
         </div>
       </header>
       <main className="flex-1 overflow-y-auto p-4">
+        {statusMessage && (
+            <div className={`mb-2 p-2 rounded text-center text-sm ${
+                statusMessage.startsWith('Error') || statusMessage.includes('failed')
+                    ? 'bg-red-100 text-red-700 dark:bg-red-900 dark:text-red-100'
+                    : 'bg-green-100 text-green-700 dark:bg-green-900 dark:text-green-100'
+            }`}>
+              {statusMessage}
+            </div>
+        )}
         <div className="mb-4 flex justify-between">
           <button
             onClick={handleAddCookie}
@@ -174,7 +222,8 @@ const App: React.FC = () => {
         )}
         <ImportExport
           onImport={handleImportCookies}
-          onExport={handleExportCookies}
+          // onExport={handleExportCookies} // Pass if needed in ImportExport
+          cookies={filteredCookies} // Pass cookies list for "Copy as Set-Cookie" feature
         />
       </main>
     </div>
