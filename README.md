@@ -21,20 +21,16 @@ Cookie Cabinet is available on mobile devices with an interface optimised for to
 - Edge for Android and iOS
 
 Find this extension on the Chrome Web Store.
-![Chrome Web Store]
-(https://github.com/Moustachauve/cookie-editor/raw/master/readme/get-chrome.png) <!-- Link to original image for now -->
+![Chrome Web Store](https://github.com/Moustachauve/cookie-editor/raw/master/readme/get-chrome.png) <!-- Link to original image for now -->
 Find this extension on the Firefox Add-ons site.
-![Firefox Add-ons]
-(https://github.com/Moustachauve/cookie-editor/raw/master/readme/get-firefox.webp) <!-- Link to original image for now -->
+![Firefox Add-ons](https://github.com/Moustachauve/cookie-editor/raw/master/readme/get-firefox.webp) <!-- Link to original image for now -->
 
 Cookie Cabinet is available for both Mac and iOS. It has been tested on Mac, iPhone and iPad.
 Find this extension on the App Store.
-![Apple App Store]
-(https://github.com/Moustachauve/cookie-editor/raw/master/readme/get-safari-mac.svg) <!-- Link to original image for now -->
+![Apple App Store](https://github.com/Moustachauve/cookie-editor/raw/master/readme/get-safari-mac.svg) <!-- Link to original image for now -->
 Find this extension on the Microsoft Store.
 Find this extension on the Opera Extensions site.
-![Opera add-ons]
-(https://github.com/Moustachauve/cookie-editor/raw/master/readme/get-opera.png) <!-- Link to original image for now -->
+![Opera add-ons](https://github.com/Moustachauve/cookie-editor/raw/master/readme/get-opera.png) <!-- Link to original image for now -->
 
 ---
 
