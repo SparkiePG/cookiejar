@@ -34,6 +34,17 @@ Find this extension on the Opera Extensions site.
 
 ---
 
+## Changelog
+
+### v1.0.0
+- Forked from Cookie-Editor.
+- Renamed project to "Cookie Cabinet".
+- Implemented new minimalist UI using React, TypeScript, and Tailwind CSS.
+- Migrated to Manifest V3 and Vite build system.
+- Preserved all core functionalities: list/search, view/edit/create/delete cookies, bulk delete, import/export JSON, copy as Set-Cookie header, theme toggle.
+- Added GPL-3.0 license headers to all source files.
+- Updated README for attribution and new branding.
+
 ## Building the Extension
 
 1.  **Install Dependencies:** Run `npm install` or `yarn install` in the project root directory.
